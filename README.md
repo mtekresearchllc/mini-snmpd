@@ -1,9 +1,11 @@
 
 Mini SNMP Daemon – MODIFICATIONS 
-
+================
 Intended for use with ksz9897/ksz9744 ethernet switch IC or similar.
 
 A modified fork of the marvelously thin and trim mini snmp daemon.  on linux, using a microchip ksz9897 or ksz9477 we often want to represent the switch ports via snmp for interested parties to monitor.  These ethernet ports are, in some configurations, NOT real interfaces on the system.  Configuration directives are added to specify sysfs paths to mib data files etc.
+
+Do something like ./configure --enable-kszsw --with-config
 
 -----------------
 
