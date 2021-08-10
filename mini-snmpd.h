@@ -38,7 +38,7 @@
 #define MAX_NR_OIDS                                     20
 #define MAX_NR_SUBIDS                                   20
 #define MAX_NR_DISKS                                    4
-#define MAX_NR_INTERFACES                               8
+#define MAX_NR_INTERFACES                               10
 #define MAX_NR_VALUES                                   2048
 
 #define MAX_PACKET_SIZE                                 2048
@@ -59,7 +59,7 @@
 #define BER_TYPE_COUNTER                                0x41
 #define BER_TYPE_GAUGE                                  0x42
 #define BER_TYPE_TIME_TICKS                             0x43
-#define BER_TYPE_COUNTER64                              0x46 
+#define BER_TYPE_COUNTER64                              0x46
 #define BER_TYPE_NO_SUCH_OBJECT                         0x80
 #define BER_TYPE_NO_SUCH_INSTANCE                       0x81
 #define BER_TYPE_END_OF_MIB_VIEW                        0x82
@@ -237,7 +237,7 @@ typedef struct netinfo_s {
 	char mac_addr[MAX_NR_INTERFACES][6];
 } netinfo_t;
 
- 
+
 typedef struct ipinfo_s {
 	long long ipForwarding;
 	long long ipDefaultTTL;
@@ -379,6 +379,16 @@ value_t *mib_findnext (const oid_t *oid);
 int ethtool_gstats(int intf, netinfo_t *netinfo, field_t *field);
 #else
 #define ethtool_gstats(intf, netinfo, field) (-1)
+#endif
+
+#ifdef CONFIG_ENABLE_KSZSW
+void kszsw_get_netinfo(netinfo_t *netinfo);
+int kszsw_gstats(int intf, netinfo_t *netinfo);
+char * kszsw_getifdesc(int intf);
+#else
+#define kszsw_gstats(intf, netinfo, field) (-1)
+#define kszsw_get_netinfo(netinfo) (-1)
+#define kszsw_getifdesc(intf) (NULL)
 #endif
 
 #endif /* MINI_SNMPD_H_ */

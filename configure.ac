@@ -56,6 +56,10 @@ AC_ARG_ENABLE(ethtool,
    AS_HELP_STRING([--enable-ethtool], [Enable ethtool interface stats, disabled by default]),
    	[enable_ethtool=$enableval], [enable_ethtool=no])
 
+AC_ARG_ENABLE(kszsw,
+   AS_HELP_STRING([--enable-kszsw], [Enable gathering of ksz9897/9477 interface stats, disabled by default]),
+   	[enable_kszsw=$enableval], [enable_kszsw=no])
+
 ### Enable features ###########################################################################
 AS_IF([test "x$with_vendor" != "xno"],[
 	AS_IF([test "x$vendor" = "xyes"],[
@@ -80,6 +84,9 @@ AS_IF([test "x$enable_ipv6" != "xno"],[
 
 AS_IF([test "x$enable_ethtool" != "xno"],[
    AC_DEFINE(CONFIG_ENABLE_ETHTOOL, 1, [Define to enable ethtool stats.])])
+
+AS_IF([test "x$enable_kszsw" != "xno"],[
+   AC_DEFINE(CONFIG_ENABLE_KSZSW, 1, [Define to enable kszsw stats.])])
 
 # Check where to install the systemd .service file
 AS_IF([test "x$with_systemd" = "xyes" -o "x$with_systemd" = "xauto"], [
@@ -132,6 +139,7 @@ cat <<EOF
   demo mode.........: $enable_demo
   systemd...........: $with_systemd
   ethtool stats.....: $enable_ethtool
+  ksz stats.........: $enable_kszsw
 
 ------------- Compiler version --------------
 $($CC --version || true)

@@ -764,7 +764,11 @@ int mib_build(void)
 	else
 		hostname[sizeof(hostname) - 1] = '\0';
 
-	get_netinfo(&netinfo);
+#ifdef CONFIG_ENABLE_KSZSW
+        kszsw_get_netinfo(&netinfo);
+#else
+        get_netinfo(&netinfo);
+#endif
 
 	/*
 	 * The system MIB: basic info about the host (SNMPv2-MIB.txt)
@@ -920,7 +924,14 @@ int mib_build(void)
 
 		/* ifName */
 		for (i = 0; i < g_interface_list_length; i++) {
-			if (build_str(&m_ifxtable_oid, 1, i + 1, g_interface_list[i]) == -1)
+                        char *desc = kszsw_getifdesc(i);
+                        char buf[64];
+                        if (desc) {
+                                snprintf(buf, sizeof(buf)-1,"%s (%s)", g_interface_list[i], kszsw_getifdesc(i));
+                        } else {
+                                snprintf(buf, sizeof(buf)-1,"%s", g_interface_list[i]);
+                        }
+			if (build_str(&m_ifxtable_oid, 1, i + 1, buf) == -1)
 				return -1;
 		}
 
@@ -1094,7 +1105,11 @@ int mib_update(int full)
 	 */
 	if (full) {
 		if (g_interface_list_length > 0) {
-			get_netinfo(&netinfo);
+#ifdef CONFIG_ENABLE_KSZSW
+                        kszsw_get_netinfo(&netinfo);
+#else
+                        get_netinfo(&netinfo);
+#endif
 
 			for (i = 0; i < g_interface_list_length; i++) {
 				if (update_int(&m_if_2_oid, 3, i + 1, &pos, netinfo.if_type[i]) == -1)

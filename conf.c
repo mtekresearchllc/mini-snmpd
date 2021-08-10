@@ -18,6 +18,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "ethtool-conf.h"
+#include "kszsw-conf.h"
 #include "mini-snmpd.h"
 
 static cfg_t *cfg = NULL;
@@ -82,6 +83,16 @@ int read_config(char *file)
 		CFG_STR("tx_drops", NULL, CFGF_NONE),
 		CFG_END()
 	};
+
+	cfg_opt_t kszsw_opts[] = {
+		CFG_STR("mib_path", NULL, CFGF_NONE), /**< path to sw mib for port */
+                CFG_STR("speed_path", NULL, CFGF_NONE), /**< path to sw speed/link state for port */
+                CFG_STR("macaddr_path", NULL, CFGF_NONE), /**< path to file containing mac string */
+                CFG_STR("macaddr_str", NULL, CFGF_NONE), /**< alternative mac string for port */
+                CFG_STR("description", NULL, CFGF_NONE), /**< description of the interface */
+		CFG_END()
+	};
+
 	cfg_opt_t opts[] = {
 		CFG_STR ("location", NULL, CFGF_NONE),
 		CFG_STR ("contact", NULL, CFGF_NONE),
@@ -93,6 +104,7 @@ int read_config(char *file)
 		CFG_STR_LIST("disk-table", "/", CFGF_NONE),
 		CFG_STR_LIST("iface-table", NULL, CFGF_NONE),
 		CFG_SEC("ethtool", ethtool_opts, CFGF_MULTI | CFGF_TITLE | CFGF_NO_TITLE_DUPES),
+                CFG_SEC("kszsw", kszsw_opts, CFGF_MULTI | CFGF_TITLE | CFGF_NO_TITLE_DUPES),
 		CFG_END()
 	};
 
@@ -136,6 +148,8 @@ int read_config(char *file)
 	g_vendor      = get_string(cfg, "vendor");
 
 	ethtool_xlate_cfg(cfg);
+
+        kszsw_xlate_cfg(cfg);
 
 error:
 	cfg_free(cfg);
