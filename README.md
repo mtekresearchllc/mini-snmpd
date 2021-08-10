@@ -7,6 +7,8 @@ A modified fork of the marvelously thin and trim mini snmp daemon.  on linux, us
 
 Do something like ./configure --enable-kszsw --with-config
 
+Browse mini-snmpd-ksz.conf for example use.
+
 -----------------
 
 Mini SNMP Daemon
